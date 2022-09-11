@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Chat ( {socket, username, room} ) {
     // Set state for message
     const [currentMessage, setCurrentMessage] = useState("")
+    // Empty array to take messages
+    const [messageList, setMessageList] = useState([])
 
     // Function to send message
     const sendMessage = async () => {
@@ -21,12 +23,28 @@ function Chat ( {socket, username, room} ) {
     }
 
 
+    // Listen to changes to the socket (backend)
+    useEffect(() => {
+        socket.on("receive_message", (msgData) => {
+            // Set to the previous list and add more msg
+            setMessageList((list) => [...list, msgData])
+            console.log(msgData)
+        })
+    }, [socket])
+
+
+
     return (
-        <div>
+        <div className="chat-window">
             <div className="chat-header">
                 <p>Live Chat</p>
             </div>
-            <div className="chat-body"></div>
+            <div className="chat-body">
+                {/* Shows messages in chat-body */}
+                {messageList.map((messageContent) => {
+                    return <h1>{messageContent.message}</h1>
+                })}
+            </div>
             <div className="chat-footer">
                 <input 
                     type="text" 

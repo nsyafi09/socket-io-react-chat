@@ -15,9 +15,12 @@ function App() {
   // Makign state for username and room
   const [username, setUsername] = useState("")
   const [room, setRoom] = useState("")
+  // State to allow to see the chat
+  const [showChat, setShowChat] = useState(false)
 
   // Establish connection with user and the socket.io connection
   const joinRoom = () => {
+    setShowChat(true)
     // Can only join chat if there is a Username and room
     if(username !== "" && room !== "") {
       // Emit join room and pass the data (roomId)
@@ -29,28 +32,31 @@ function App() {
 
   return (
     <div className="App">
-      <h3>Join Conversation</h3>
+      {!showChat ? (
+      <div className='joinChatContainer'>
+        <h3>Join Conversation</h3>
+        {/* Writing JavaScript if showChat */}
+        {/* For setting username */}
+        <input 
+          type="text" 
+          placeholder="name" 
+          onChange={(event) => {
+            setUsername(event.target.value)
+          }}/>
+        {/* For setting the room id */}
+        <input 
+          type="text" 
+          placeholder="Room ID"
+          onChange={(event) => {
+            setRoom(event.target.value)
+          }}/>
 
-      {/* For setting username */}
-      <input 
-        type="text" 
-        placeholder="name" 
-        onChange={(event) => {
-          setUsername(event.target.value)
-        }}/>
-      {/* For setting the room id */}
-      <input 
-        type="text" 
-        placeholder="Room ID"
-        onChange={(event) => {
-          setRoom(event.target.value)
-        }}/>
-
-      <button onClick={joinRoom}>Join A Room</button>
-
-      {/* Listen to username and room */}
+        <button onClick={joinRoom}>Join A Room</button>
+      </div>)
+      : (
+      // {/* Listen to username and room */}
       <Chat socket={socket} username={username} room={room}/>
-
+      )}
     </div>
   );
 }

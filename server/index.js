@@ -1,7 +1,8 @@
-const express = require('express')
-const app = express()
-const http = require('http')
-const cors = require('cors')
+const express = require("express");
+const app = express();
+const http = require("http");
+const cors = require("cors");
+
 // Importing Server from socket.io
 const { Server } = require("socket.io")
 
@@ -43,9 +44,12 @@ io.on("connection", (socket) => {
 
     // Create event to send mesage
     socket.on("send_message", (msgData) => {
-        console.log(msgData)
+        // Emit msg data to front end
+        // socket.emit("receive_message", msgData) // for general emit
+        // For specific room
+        socket.to(msgData.room).emit("receive_message", msgData)
+        // console.log(msgData)
     })
-
 
 
     // Listen to those who disconnect
